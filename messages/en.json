@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "title": "Elizim - Handcrafted Home Textiles",
+    "description": "Handmade custom design home textile products from Karabük. Embroidery, lace, gift wraps and more."
+  },
+  "nav": {
+    "products": "Products",
+    "about": "About Us",
+    "contact": "Contact",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "pricing": "Pricing Policy"
+  },
+  "hero": {
+    "title": "Adding Value to Your Home with Handcraftsmanship",
+    "subtitle": "Handmade custom design home textile products from Karabük",
+    "cta": "Explore Products",
+    "ctaSecondary": "About Us"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Discover the different branches of our craftsmanship"
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Our most popular handcrafted products",
+    "viewAll": "View All"
+  },
+  "instagram": {
+    "title": "Follow Us on Instagram",
+    "subtitle": "Snapshots from our workshop and new designs",
+    "follow": "Follow"
+  },
+  "features": {
+    "title": "Why Elizim?",
+    "quality": {
+      "title": "Handcraft Quality",
+      "description": "Each product is carefully handmade using traditional techniques"
+    },
+    "design": {
+      "title": "Custom Design",
+      "description": "Unique designs customized to your preferences"
+    },
+    "delivery": {
+      "title": "Fast Delivery",
+      "description": "Safe and fast shipping across Turkey"
+    }
+  },
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "subtitle": "Experiences from our satisfied customers"
+  },
+  "contactCta": {
+    "title": "Would You Like to Place an Order?",
+    "subtitle": "Easily order via WhatsApp",
+    "cta": "Contact via WhatsApp"
+  },
+  "cart": {
+    "title": "My Cart",
+    "add": "Add to Cart",
+    "remove": "Remove",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "order": "Order via WhatsApp",
+    "continueShopping": "Continue Shopping"
+  },
+  "products": {
+    "title": "Our Products",
+    "subtitle": "All our handcrafted products",
+    "search": "Search products...",
+    "filter": "Filter",
+    "sort": "Sort",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "allCategories": "All Categories",
+    "noResults": "No products found",
+    "deliveryTime": "Delivery Time",
+    "relatedProducts": "Related Products",
+    "orderWhatsapp": "Order via WhatsApp"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Our handcraftsmanship story from Karabük to the world",
+    "story": "Our Workshop Story",
+    "values": "Our Values"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Reach out to us, let us answer your questions",
+    "form": {
+      "name": "Your Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Your Message",
+      "send": "Send",
+      "success": "Your message has been sent successfully!",
+      "error": "An error occurred, please try again"
+    },
+    "info": {
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "whatsapp": "WhatsApp"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "News and tips from the world of handcrafts",
+    "readMore": "Read More",
+    "backToBlog": "Back to Blog"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to your curiosities"
+  },
+  "pricingPolicy": {
+    "title": "Pricing Policy",
+    "subtitle": "Our pricing philosophy for handcrafted products"
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "kvkk": "KVKK Privacy Notice"
+  },
+  "footer": {
+    "description": "Custom design home textile products with handcraftsmanship",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "backToHome": "Back to Home",
+    "currency": "TL"
+  },
+  "localeSwitcher": {
+    "tr": "Türkçe",
+    "en": "English",
+    "ar": "العربية"
+  }
+}

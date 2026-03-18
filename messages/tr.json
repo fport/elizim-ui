@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "title": "Elizim - El İşçiliği ile Özel Tasarım Ev Tekstili",
+    "description": "Karabük'ten el emeği göz nuru özel tasarım ev tekstili ürünleri. Nakış, dantel, bohça ve daha fazlası."
+  },
+  "nav": {
+    "products": "Ürünler",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "blog": "Blog",
+    "faq": "SSS",
+    "pricing": "Fiyat Politikası"
+  },
+  "hero": {
+    "title": "El İşçiliği ile Evinize Değer Katıyoruz",
+    "subtitle": "Karabük'ten el emeği, göz nuru özel tasarım ev tekstili ürünleri",
+    "cta": "Ürünleri Keşfet",
+    "ctaSecondary": "Hakkımızda"
+  },
+  "categories": {
+    "title": "Kategoriler",
+    "subtitle": "El işçiliğimizin farklı dallarını keşfedin"
+  },
+  "featured": {
+    "title": "Öne Çıkan Ürünler",
+    "subtitle": "En çok beğenilen el işi ürünlerimiz",
+    "viewAll": "Tümünü Gör"
+  },
+  "instagram": {
+    "title": "Instagram'da Biz",
+    "subtitle": "Atölyemizden kareler ve yeni tasarımlar",
+    "follow": "Takip Et"
+  },
+  "features": {
+    "title": "Neden Elizim?",
+    "quality": {
+      "title": "El İşçiliği Kalitesi",
+      "description": "Her ürün özenle, geleneksel tekniklerle el emeğiyle üretilir"
+    },
+    "design": {
+      "title": "Özel Tasarım",
+      "description": "İsteğinize göre kişiselleştirilmiş benzersiz tasarımlar"
+    },
+    "delivery": {
+      "title": "Hızlı Teslimat",
+      "description": "Türkiye'nin her yerine güvenli ve hızlı kargo"
+    }
+  },
+  "testimonials": {
+    "title": "Müşterilerimiz Ne Diyor?",
+    "subtitle": "Memnun müşterilerimizin deneyimleri"
+  },
+  "contactCta": {
+    "title": "Sipariş Vermek İster Misiniz?",
+    "subtitle": "WhatsApp üzerinden kolayca sipariş verin",
+    "cta": "WhatsApp ile İletişime Geç"
+  },
+  "cart": {
+    "title": "Sepetim",
+    "add": "Sepete Ekle",
+    "remove": "Kaldır",
+    "empty": "Sepetiniz boş",
+    "total": "Toplam",
+    "order": "WhatsApp ile Sipariş Ver",
+    "continueShopping": "Alışverişe Devam"
+  },
+  "products": {
+    "title": "Ürünlerimiz",
+    "subtitle": "El işçiliği ile üretilen tüm ürünlerimiz",
+    "search": "Ürün ara...",
+    "filter": "Filtrele",
+    "sort": "Sırala",
+    "sortNewest": "En Yeni",
+    "sortPriceAsc": "Fiyat: Düşükten Yükseğe",
+    "sortPriceDesc": "Fiyat: Yüksekten Düşüğe",
+    "allCategories": "Tüm Kategoriler",
+    "noResults": "Ürün bulunamadı",
+    "deliveryTime": "Teslimat Süresi",
+    "relatedProducts": "Benzer Ürünler",
+    "orderWhatsapp": "WhatsApp ile Sipariş Ver"
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "subtitle": "Karabük'ten dünyaya uzanan el işçiliği hikayemiz",
+    "story": "Atölye Hikayemiz",
+    "values": "Değerlerimiz"
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Bize ulaşın, sorularınızı yanıtlayalım",
+    "form": {
+      "name": "Adınız",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "message": "Mesajınız",
+      "send": "Gönder",
+      "success": "Mesajınız başarıyla gönderildi!",
+      "error": "Bir hata oluştu, lütfen tekrar deneyin"
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "E-posta",
+      "address": "Adres",
+      "whatsapp": "WhatsApp"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "El işçiliği dünyasından haberler ve ipuçları",
+    "readMore": "Devamını Oku",
+    "backToBlog": "Blog'a Dön"
+  },
+  "faq": {
+    "title": "Sıkça Sorulan Sorular",
+    "subtitle": "Merak ettiklerinizin cevapları"
+  },
+  "pricingPolicy": {
+    "title": "Fiyat Politikası",
+    "subtitle": "El işçiliği ürünlerimizin fiyatlandırma felsefemiz"
+  },
+  "legal": {
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "kvkk": "KVKK Aydınlatma Metni"
+  },
+  "footer": {
+    "description": "El işçiliği ile özel tasarım ev tekstili ürünleri",
+    "quickLinks": "Hızlı Bağlantılar",
+    "legal": "Yasal",
+    "followUs": "Bizi Takip Edin",
+    "rights": "Tüm hakları saklıdır."
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "backToHome": "Ana Sayfaya Dön",
+    "currency": "TL"
+  },
+  "localeSwitcher": {
+    "tr": "Türkçe",
+    "en": "English",
+    "ar": "العربية"
+  }
+}
