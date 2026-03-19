@@ -15,7 +15,14 @@
     "title": "Adding Value to Your Home with Handcraftsmanship",
     "subtitle": "Handmade custom design home textile products from Karabük",
     "cta": "Explore Products",
-    "ctaSecondary": "About Us"
+    "ctaSecondary": "About Us",
+    "stat1": "Handmade",
+    "stat2": "Fast Shipping",
+    "stat3": "From Karabük",
+    "cat1": "Embroidery",
+    "cat2": "Lace",
+    "cat3": "Gift Wrap",
+    "cat4": "Covers"
   },
   "categories": {
     "title": "Categories",
@@ -24,27 +31,26 @@
   "featured": {
     "title": "Featured Products",
     "subtitle": "Our most popular handcrafted products",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "item1Name": "Embroidered Gift Wrap",
+    "item1Cat": "Gift Wrap",
+    "item2Name": "Lace Runner",
+    "item2Cat": "Lace",
+    "item3Name": "Embroidered Tablecloth",
+    "item3Cat": "Embroidery",
+    "item4Name": "Embroidered Towel Set",
+    "item4Cat": "Towels"
   },
   "instagram": {
     "title": "Follow Us on Instagram",
     "subtitle": "Snapshots from our workshop and new designs",
     "follow": "Follow"
   },
-  "features": {
-    "title": "Why Elizim?",
-    "quality": {
-      "title": "Handcraft Quality",
-      "description": "Each product is carefully handmade using traditional techniques"
-    },
-    "design": {
-      "title": "Custom Design",
-      "description": "Unique designs customized to your preferences"
-    },
-    "delivery": {
-      "title": "Fast Delivery",
-      "description": "Safe and fast shipping across Turkey"
-    }
+  "trustStrip": {
+    "handmade": "Handmade Production",
+    "custom": "Custom Design",
+    "shipping": "Fast Shipping",
+    "secure": "Secure Shopping"
   },
   "testimonials": {
     "title": "What Our Customers Say",

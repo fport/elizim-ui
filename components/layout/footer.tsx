@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { MessageCircle } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
@@ -39,9 +40,13 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
-              <span className="font-heading text-2xl font-bold text-primary">
-                Elizim
-              </span>
+              <Image
+                src="/logo.webp"
+                alt="Elizim"
+                width={48}
+                height={48}
+                className="size-12"
+              />
             </Link>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("description")}

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 
 const locales = [
-  { code: "tr" as const, flag: "\u{1F1F9}\u{1F7E7}", label: "TR" },
+  { code: "tr" as const, flag: "\u{1F1F9}\u{1F1F7}", label: "TR" },
   { code: "en" as const, flag: "\u{1F1EC}\u{1F1E7}", label: "EN" },
   { code: "ar" as const, flag: "\u{1F1F8}\u{1F1E6}", label: "AR" },
 ];

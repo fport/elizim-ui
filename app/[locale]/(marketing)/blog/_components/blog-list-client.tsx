@@ -17,10 +17,14 @@ const placeholderPosts: BlogPost[] = [
     excerpt:
       "Binlerce yıllık geçmişe sahip nakış sanatı, Anadolu kültüründe önemli bir yere sahiptir. Bu yazıda nakışın tarihini ve günümüzdeki önemini keşfedin.",
     content: "",
-    coverImageUrl: "/images/placeholder-blog.jpg",
+    category: null,
+    tags: null,
+    imageUrl: "/images/placeholder-blog.jpg",
     locale: "tr",
+    isPublished: true,
     publishedAt: "2025-01-15T10:00:00Z",
-    author: "Elizim Atölye",
+    createdAt: "2025-01-15T10:00:00Z",
+    updatedAt: "2025-01-15T10:00:00Z",
   },
   {
     id: "2",
@@ -29,10 +33,14 @@ const placeholderPosts: BlogPost[] = [
     excerpt:
       "El işi ürünlerinizin ömrünü uzatmak için doğru bakım yöntemlerini öğrenin. Yıkama, kurutma ve saklama tavsiyeleri.",
     content: "",
-    coverImageUrl: "/images/placeholder-blog.jpg",
+    category: null,
+    tags: null,
+    imageUrl: "/images/placeholder-blog.jpg",
     locale: "tr",
+    isPublished: true,
     publishedAt: "2025-01-10T10:00:00Z",
-    author: "Elizim Atölye",
+    createdAt: "2025-01-10T10:00:00Z",
+    updatedAt: "2025-01-10T10:00:00Z",
   },
   {
     id: "3",
@@ -41,10 +49,14 @@ const placeholderPosts: BlogPost[] = [
     excerpt:
       "Bu yılın çeyiz trendlerini inceliyoruz. Modern çizgiler ile geleneksel motiflerin uyumu, yeni renk paletleri ve daha fazlası.",
     content: "",
-    coverImageUrl: "/images/placeholder-blog.jpg",
+    category: null,
+    tags: null,
+    imageUrl: "/images/placeholder-blog.jpg",
     locale: "tr",
+    isPublished: true,
     publishedAt: "2025-01-05T10:00:00Z",
-    author: "Elizim Atölye",
+    createdAt: "2025-01-05T10:00:00Z",
+    updatedAt: "2025-01-05T10:00:00Z",
   },
 ];
 
@@ -75,7 +87,7 @@ export function BlogListClient() {
     queryKey: ["blog-posts", locale],
     queryFn: async () => {
       const response = await blogApi.getAll(locale);
-      return response.data;
+      return response.posts;
     },
     placeholderData: placeholderPosts,
     retry: false,
@@ -115,7 +127,7 @@ export function BlogListClient() {
                 {/* Cover image */}
                 <div className="relative aspect-video sm:aspect-auto sm:h-full">
                   <Image
-                    src={post.coverImageUrl}
+                    src={post.imageUrl || "/images/placeholder-blog.jpg"}
                     alt={post.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
@@ -127,14 +139,16 @@ export function BlogListClient() {
                 <div className="flex flex-col justify-center p-6 sm:col-span-2 sm:p-8">
                   <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="size-3.5" />
-                    <time dateTime={post.publishedAt}>
-                      {new Date(post.publishedAt).toLocaleDateString(
-                        locale === "tr" ? "tr-TR" : locale === "ar" ? "ar-SA" : "en-US",
-                        { year: "numeric", month: "long", day: "numeric" },
-                      )}
-                    </time>
+                    {post.publishedAt && (
+                      <time dateTime={post.publishedAt}>
+                        {new Date(post.publishedAt).toLocaleDateString(
+                          locale === "tr" ? "tr-TR" : locale === "ar" ? "ar-SA" : "en-US",
+                          { year: "numeric", month: "long", day: "numeric" },
+                        )}
+                      </time>
+                    )}
                     <span className="text-border">|</span>
-                    <span>{post.author}</span>
+                    <span>Elizim Atölye</span>
                   </div>
 
                   <h2 className="font-heading text-xl font-bold leading-snug transition-colors group-hover:text-primary sm:text-2xl">

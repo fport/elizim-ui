@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 
 interface Testimonial {
   id: string;
@@ -68,7 +68,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`size-4 ${
+          className={`size-3.5 ${
             i < rating
               ? "fill-amber-400 text-amber-400"
               : "fill-muted text-muted"
@@ -83,39 +83,49 @@ export function TestimonialSection() {
   const t = useTranslations("testimonials");
 
   return (
-    <section className="px-4 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-muted/30 px-4 py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl">
         {/* Section header */}
-        <div className="mb-12 text-center">
+        <div className="mb-10 text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
+            {t("subtitle")}
+          </p>
           <h2 className="font-heading text-3xl font-bold sm:text-4xl">
             {t("title")}
           </h2>
-          <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>
 
-        {/* Testimonial grid */}
+        {/* Testimonial grid - 2 cols on tablet, 4 on desktop */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
         >
           {testimonials.map((testimonial) => (
             <motion.div
               key={testimonial.id}
               variants={cardVariants}
-              className="glass-card flex flex-col gap-4 rounded-2xl p-6"
+              className="glass-card flex flex-col gap-4 rounded-2xl p-5 sm:p-6"
             >
-              <StarRating rating={testimonial.rating} />
+              <div className="flex items-center justify-between">
+                <StarRating rating={testimonial.rating} />
+                <Quote className="size-5 text-primary/20" />
+              </div>
               <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
-                &ldquo;{testimonial.text}&rdquo;
+                {testimonial.text}
               </p>
-              <div className="border-t border-border pt-4">
-                <p className="text-sm font-semibold">{testimonial.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {testimonial.location}
-                </p>
+              <div className="flex items-center gap-3 border-t border-border/60 pt-4">
+                <div className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                  {testimonial.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">{testimonial.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {testimonial.location}
+                  </p>
+                </div>
               </div>
             </motion.div>
           ))}

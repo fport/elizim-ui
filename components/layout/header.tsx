@@ -9,6 +9,7 @@ import { useCartStore } from "@/stores/cart-store";
 import { ModeToggle } from "@/components/mode-toggle";
 import { LocaleSwitcher } from "@/components/marketing/locale-switcher";
 import { CartDrawer } from "@/components/marketing/cart-drawer";
+import Image from "next/image";
 
 const NAV_ITEMS = [
   { key: "products", href: "/urunler" },
@@ -80,9 +81,13 @@ export function Header() {
             href="/"
             className="relative z-10 flex items-center gap-2"
           >
-            <span className="font-heading text-2xl font-bold tracking-tight text-primary">
-              Elizim
-            </span>
+            <Image
+              src="/logo.webp"
+              alt="Elizim"
+              width={48}
+              height={48}
+              className="size-12"
+            />
           </Link>
 
           {/* Desktop nav */}

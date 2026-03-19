@@ -5,57 +5,23 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { Instagram, Play, ExternalLink } from "lucide-react";
-import { instagramApi, type InstagramPost } from "@/lib/api";
+import { instagramApi } from "@/lib/api";
 
-const placeholderPosts: InstagramPost[] = [
-  {
-    id: "1",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "Yeni nakış tasarımlarımız",
-    mediaType: "IMAGE",
-    timestamp: "2025-01-15T10:00:00Z",
-  },
-  {
-    id: "2",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "Atölyeden kareler",
-    mediaType: "VIDEO",
-    timestamp: "2025-01-14T10:00:00Z",
-  },
-  {
-    id: "3",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "Dantel yapım süreci",
-    mediaType: "IMAGE",
-    timestamp: "2025-01-13T10:00:00Z",
-  },
-  {
-    id: "4",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "El işi masa örtüsü",
-    mediaType: "IMAGE",
-    timestamp: "2025-01-12T10:00:00Z",
-  },
-  {
-    id: "5",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "Bohça hazırlığı",
-    mediaType: "VIDEO",
-    timestamp: "2025-01-11T10:00:00Z",
-  },
-  {
-    id: "6",
-    mediaUrl: "/images/placeholder-ig.jpg",
-    permalink: "https://instagram.com/elizim.art",
-    caption: "Yeni sezon ürünler",
-    mediaType: "IMAGE",
-    timestamp: "2025-01-10T10:00:00Z",
-  },
+interface FeedPost {
+  id: string;
+  mediaUrl: string | null;
+  permalink: string | null;
+  caption: string | null;
+  mediaType: string | null;
+}
+
+const placeholderPosts: FeedPost[] = [
+  { id: "1", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "Yeni nakış tasarımlarımız", mediaType: "IMAGE" },
+  { id: "2", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "Atölyeden kareler", mediaType: "VIDEO" },
+  { id: "3", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "Dantel yapım süreci", mediaType: "IMAGE" },
+  { id: "4", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "El işi masa örtüsü", mediaType: "IMAGE" },
+  { id: "5", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "Bohça hazırlığı", mediaType: "VIDEO" },
+  { id: "6", mediaUrl: "/images/placeholder-ig.jpg", permalink: "https://instagram.com/eliziiim", caption: "Yeni sezon ürünler", mediaType: "IMAGE" },
 ];
 
 const containerVariants = {
@@ -80,21 +46,17 @@ const cardVariants = {
 export function InstagramFeedSection() {
   const t = useTranslations("instagram");
 
-  const { data: posts } = useQuery({
+  const { data: feedRes } = useQuery({
     queryKey: ["instagram-feed"],
-    queryFn: async () => {
-      const response = await instagramApi.getFeed();
-      return response.data;
-    },
-    placeholderData: placeholderPosts,
+    queryFn: () => instagramApi.getFeed(),
     retry: false,
   });
 
-  const feedPosts = posts ?? placeholderPosts;
+  const feedPosts = feedRes?.posts?.length ? feedRes.posts : placeholderPosts;
 
   return (
-    <section className="px-4 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section className="px-4 py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl">
         {/* Section header */}
         <div className="mb-12 text-center">
           <div className="mb-4 inline-flex items-center gap-2 text-primary">
@@ -121,13 +83,13 @@ export function InstagramFeedSection() {
             <motion.a
               key={post.id}
               variants={cardVariants}
-              href={post.permalink}
+              href={post.permalink || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative aspect-square overflow-hidden rounded-xl bg-muted"
             >
               <Image
-                src={post.mediaUrl}
+                src={post.mediaUrl || "/images/placeholder-ig.jpg"}
                 alt={post.caption || "Instagram post"}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"

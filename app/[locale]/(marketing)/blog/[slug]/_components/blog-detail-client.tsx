@@ -39,10 +39,14 @@ const placeholderPost: BlogPost = {
 
 <p>Atölyemizde ürettiğimiz her ürün, bu köklü geleneğin izlerini taşır. Geleneksel motifleri modern çizgilerle buluşturarak, hem nostaljik hem de çağdaş ürünler ortaya koyuyoruz.</p>
   `.trim(),
-  coverImageUrl: "/images/placeholder-blog.jpg",
+  category: null,
+  tags: null,
+  imageUrl: "/images/placeholder-blog.jpg",
   locale: "tr",
+  isPublished: true,
   publishedAt: "2025-01-15T10:00:00Z",
-  author: "Elizim Atölye",
+  createdAt: "2025-01-15T10:00:00Z",
+  updatedAt: "2025-01-15T10:00:00Z",
 };
 
 export function BlogDetailClient({ slug }: { slug: string }) {
@@ -53,7 +57,7 @@ export function BlogDetailClient({ slug }: { slug: string }) {
     queryKey: ["blog-post", slug],
     queryFn: async () => {
       const response = await blogApi.getBySlug(slug);
-      return response.data;
+      return response.post;
     },
     placeholderData: placeholderPost,
     retry: false,
@@ -81,7 +85,7 @@ export function BlogDetailClient({ slug }: { slug: string }) {
           className="relative mb-8 aspect-video overflow-hidden rounded-2xl bg-muted"
         >
           <Image
-            src={post.coverImageUrl}
+            src={post.imageUrl || "/images/placeholder-blog.jpg"}
             alt={post.title}
             fill
             sizes="(max-width: 768px) 100vw, 768px"
@@ -99,16 +103,18 @@ export function BlogDetailClient({ slug }: { slug: string }) {
         >
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="size-4" />
-            <time dateTime={post.publishedAt}>
-              {new Date(post.publishedAt).toLocaleDateString(
-                locale === "tr" ? "tr-TR" : locale === "ar" ? "ar-SA" : "en-US",
-                { year: "numeric", month: "long", day: "numeric" },
-              )}
-            </time>
+            {post.publishedAt && (
+              <time dateTime={post.publishedAt}>
+                {new Date(post.publishedAt).toLocaleDateString(
+                  locale === "tr" ? "tr-TR" : locale === "ar" ? "ar-SA" : "en-US",
+                  { year: "numeric", month: "long", day: "numeric" },
+                )}
+              </time>
+            )}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <User className="size-4" />
-            {post.author}
+            Elizim Atölye
           </span>
         </motion.div>
 
@@ -128,7 +134,7 @@ export function BlogDetailClient({ slug }: { slug: string }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="blog-content mt-8"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
         />
 
         {/* Bottom navigation */}

@@ -3,15 +3,16 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { motion } from "motion/react";
-import { Scissors, Flower2, Gift, Waves, Heart, TableProperties } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 const categories = [
-  { slug: "nakis", icon: Scissors, nameKey: "Nakış" },
-  { slug: "dantel", icon: Flower2, nameKey: "Dantel" },
-  { slug: "bohca", icon: Gift, nameKey: "Bohça" },
-  { slug: "havlu", icon: Waves, nameKey: "Havlu" },
-  { slug: "ceyiz", icon: Heart, nameKey: "Çeyiz" },
-  { slug: "ortu", icon: TableProperties, nameKey: "Örtü" },
+  { slug: "nakis", nameKey: "Nakış", image: "/hero-2.png" },
+  { slug: "dantel", nameKey: "Dantel", image: "/hero-7.png" },
+  { slug: "bohca", nameKey: "Bohça", image: "/hero-1.png" },
+  { slug: "havlu", nameKey: "Havlu", image: "/highligted-4.png" },
+  { slug: "ceyiz", nameKey: "Çeyiz", image: "/hero-6.png" },
+  { slug: "ortu", nameKey: "Örtü", image: "/hero-8.png" },
 ];
 
 const containerVariants = {
@@ -25,11 +26,10 @@ const containerVariants = {
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const },
   },
 } as const;
@@ -38,43 +38,51 @@ export function CategoriesSection() {
   const t = useTranslations("categories");
 
   return (
-    <section className="px-4 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section className="px-4 py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl">
         {/* Section header */}
-        <div className="mb-12 text-center">
+        <div className="mb-10 text-center">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-primary">
+            {t("subtitle")}
+          </p>
           <h2 className="font-heading text-3xl font-bold sm:text-4xl">
             {t("title")}
           </h2>
-          <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>
 
-        {/* Horizontal scroll on mobile, grid on desktop */}
+        {/* Category grid - visual cards with images */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
-          className="flex gap-4 overflow-x-auto pb-4 scrollbar-none sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-6"
+          className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3"
         >
-          {categories.map((cat) => {
-            const Icon = cat.icon;
-
-            return (
-              <motion.div key={cat.slug} variants={cardVariants}>
-                <Link
-                  href={{ pathname: "/urunler", query: { category: cat.slug } }}
-                  className="glass-card group flex min-w-[140px] flex-col items-center gap-4 rounded-2xl p-6 sm:min-w-0"
-                >
-                  <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="size-7" />
-                  </div>
-                  <span className="whitespace-nowrap text-sm font-semibold">
+          {categories.map((cat) => (
+            <motion.div key={cat.slug} variants={cardVariants}>
+              <Link
+                href={{ pathname: "/urunler", query: { category: cat.slug } }}
+                className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-muted"
+              >
+                <Image
+                  src={cat.image}
+                  alt={cat.nameKey}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-colors group-hover:from-black/70" />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 sm:p-5">
+                  <span className="font-heading text-lg font-bold text-white sm:text-xl">
                     {cat.nameKey}
                   </span>
-                </Link>
-              </motion.div>
-            );
-          })}
+                  <span className="flex size-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors group-hover:bg-white/30">
+                    <ArrowRight className="size-4" />
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

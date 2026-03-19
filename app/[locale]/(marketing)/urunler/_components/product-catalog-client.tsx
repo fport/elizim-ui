@@ -5,113 +5,11 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
-import { productsApi, categoriesApi, type Product, type Category } from "@/lib/api";
+import { productsApi, categoriesApi } from "@/lib/api";
 import { ProductCard } from "../../_components/product-card";
 import { cn } from "@/lib/utils";
 
-type SortOption = "newest" | "price_asc" | "price_desc";
-
-const placeholderProducts: Product[] = [
-  {
-    id: "1",
-    title: "İşlemeli Keten Masa Örtüsü",
-    slug: "islemeli-keten-masa-ortusu",
-    description: "El işçiliği ile üretilen keten masa örtüsü",
-    price: 85000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "1",
-    categoryName: "Örtü",
-    deliveryDays: 7,
-    isFeatured: true,
-    isActive: true,
-    createdAt: "2025-01-01T00:00:00Z",
-  },
-  {
-    id: "2",
-    title: "El Yapımı Dantel Sehpa Takımı",
-    slug: "el-yapimi-dantel-sehpa-takimi",
-    description: "Geleneksel dantel tekniği ile üretilen sehpa takımı",
-    price: 65000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "2",
-    categoryName: "Dantel",
-    deliveryDays: 5,
-    isFeatured: true,
-    isActive: true,
-    createdAt: "2025-01-02T00:00:00Z",
-  },
-  {
-    id: "3",
-    title: "Nakışlı Bohça Seti",
-    slug: "nakisli-bohca-seti",
-    description: "Özel tasarım nakışlı bohça seti",
-    price: 120000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "3",
-    categoryName: "Bohça",
-    deliveryDays: 10,
-    isFeatured: true,
-    isActive: true,
-    createdAt: "2025-01-03T00:00:00Z",
-  },
-  {
-    id: "4",
-    title: "Özel Tasarım Havlu Kenarı",
-    slug: "ozel-tasarim-havlu-kenari",
-    description: "Kişiye özel tasarım havlu kenarı",
-    price: 45000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "4",
-    categoryName: "Havlu",
-    deliveryDays: 3,
-    isFeatured: false,
-    isActive: true,
-    createdAt: "2025-01-04T00:00:00Z",
-  },
-  {
-    id: "5",
-    title: "Çeyiz Seti - Premium",
-    slug: "ceyiz-seti-premium",
-    description: "Tam çeyiz seti, nakış ve dantel işlemeli",
-    price: 350000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "5",
-    categoryName: "Çeyiz",
-    deliveryDays: 14,
-    isFeatured: true,
-    isActive: true,
-    createdAt: "2025-01-05T00:00:00Z",
-  },
-  {
-    id: "6",
-    title: "Nakışlı Yastık Kılıfı",
-    slug: "nakisli-yastik-kilifi",
-    description: "El nakışı ile süslenen yastık kılıfı",
-    price: 35000,
-    thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
-    categoryId: "1",
-    categoryName: "Nakış",
-    deliveryDays: 5,
-    isFeatured: false,
-    isActive: true,
-    createdAt: "2025-01-06T00:00:00Z",
-  },
-];
-
-const placeholderCategories: Category[] = [
-  { id: "0", name: "Tümü", slug: "", description: "", imageUrl: "", productCount: 6 },
-  { id: "1", name: "Nakış", slug: "nakis", description: "", imageUrl: "", productCount: 2 },
-  { id: "2", name: "Dantel", slug: "dantel", description: "", imageUrl: "", productCount: 1 },
-  { id: "3", name: "Bohça", slug: "bohca", description: "", imageUrl: "", productCount: 1 },
-  { id: "4", name: "Havlu", slug: "havlu", description: "", imageUrl: "", productCount: 1 },
-  { id: "5", name: "Çeyiz", slug: "ceyiz", description: "", imageUrl: "", productCount: 1 },
-];
+type SortOption = "newest" | "price-asc" | "price-desc";
 
 export function ProductCatalogClient() {
   const t = useTranslations("products");
@@ -120,46 +18,46 @@ export function ProductCatalogClient() {
   const [sort, setSort] = useState<SortOption>("newest");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
 
-  const { data: productsData } = useQuery({
-    queryKey: ["products", { categorySlug: selectedCategory, sort }],
-    queryFn: async () => {
-      const response = await productsApi.getAll({
-        categorySlug: selectedCategory || undefined,
+  const { data: productsRes } = useQuery({
+    queryKey: ["products", selectedCategory, sort],
+    queryFn: () =>
+      productsApi.getAll({
+        category: selectedCategory || undefined,
         sort,
-      });
-      return response.data;
-    },
-    placeholderData: placeholderProducts,
-    retry: false,
+      }),
   });
 
-  const { data: categoriesData } = useQuery({
+  const { data: categoriesRes } = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => {
-      const response = await categoriesApi.getAll();
-      return response.data;
-    },
-    placeholderData: placeholderCategories.slice(1),
-    retry: false,
+    queryFn: () => categoriesApi.getAll(),
   });
 
-  const products = productsData ?? placeholderProducts;
-  const categories = categoriesData ?? placeholderCategories.slice(1);
+  const products = productsRes?.products ?? [];
+  const categories = categoriesRes?.categories ?? [];
 
+  // Client-side search filter
   const filteredProducts = useMemo(() => {
     if (!search.trim()) return products;
     const query = search.toLowerCase();
     return products.filter(
       (p) =>
         p.title.toLowerCase().includes(query) ||
-        p.categoryName.toLowerCase().includes(query),
+        (p.description?.toLowerCase().includes(query) ?? false) ||
+        (p.tags?.toLowerCase().includes(query) ?? false),
     );
   }, [products, search]);
 
+  // Resolve category name for each product
+  const getCategoryName = (categoryId: string | null) => {
+    if (!categoryId) return "";
+    const cat = categories.find((c) => c.id === categoryId);
+    return cat?.name ?? "";
+  };
+
   const sortLabels: Record<SortOption, string> = {
     newest: t("sortNewest"),
-    price_asc: t("sortPriceAsc"),
-    price_desc: t("sortPriceDesc"),
+    "price-asc": t("sortPriceAsc"),
+    "price-desc": t("sortPriceDesc"),
   };
 
   return (
@@ -285,7 +183,16 @@ export function ProductCatalogClient() {
                     ease: [0.25, 0.46, 0.45, 0.94],
                   }}
                 >
-                  <ProductCard product={product} />
+                  <ProductCard
+                    product={{
+                      id: product.id,
+                      title: product.title,
+                      slug: product.slug,
+                      price: product.price / 100, // kuruştan TL'ye
+                      thumbnailUrl: product.thumbnailUrl || "/images/placeholder-product.jpg",
+                      categoryName: getCategoryName(product.categoryId),
+                    }}
+                  />
                 </motion.div>
               ))}
             </motion.div>

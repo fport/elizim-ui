@@ -32,12 +32,18 @@ export function ContactCtaSection() {
   }
 
   return (
-    <section className="relative overflow-hidden px-4 py-24 sm:py-32">
-      {/* Gradient background */}
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10" />
-        <div className="absolute left-1/3 top-1/3 h-[400px] w-[400px] rounded-full bg-primary/8 blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 h-[300px] w-[300px] rounded-full bg-[var(--whatsapp)]/10 blur-[80px]" />
+    <section className="relative overflow-hidden px-4 py-16 sm:py-24">
+      {/* Liquid background */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+        <div
+          className="liquid-blob absolute left-1/3 top-1/3 h-[400px] w-[400px] bg-primary/6"
+          style={{ animation: "liquid-float 10s ease-in-out infinite" }}
+        />
+        <div
+          className="liquid-blob absolute bottom-1/4 right-1/4 h-[300px] w-[300px] bg-[var(--whatsapp)]/8"
+          style={{ animation: "liquid-float-alt 8s ease-in-out infinite" }}
+        />
       </div>
 
       <div className="mx-auto flex max-w-2xl flex-col items-center text-center">

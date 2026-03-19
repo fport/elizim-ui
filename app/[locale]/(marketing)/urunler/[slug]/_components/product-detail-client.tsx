@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -14,7 +14,7 @@ import {
   ChevronRight,
   ShoppingBag,
 } from "lucide-react";
-import { productsApi, type Product } from "@/lib/api";
+import { productsApi, categoriesApi, type Product } from "@/lib/api";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { useCartStore } from "@/stores/cart-store";
 import { ProductCard } from "../../../_components/product-card";
@@ -28,17 +28,19 @@ const placeholderProduct: Product = {
     "El işçiliği ile üretilen keten masa örtüsü. Geleneksel Anadolu motifleri ile süslenen bu masa örtüsü, evinize sıcaklık ve zarafet katacaktır. Tamamen doğal keten kumaş üzerine, usta ellerle işlenmiş nakış desenleri ile bezeli bu özel ürün, hem günlük kullanım hem de özel davetler için idealdir.\n\nBoyutlar: 150x200 cm\nMalzeme: %100 Doğal Keten\nBakım: Elde yıkama önerilir",
   price: 85000,
   thumbnailUrl: "/images/placeholder-product.jpg",
-  images: [
+  images: JSON.stringify([
     "/images/placeholder-product.jpg",
     "/images/placeholder-product-2.jpg",
     "/images/placeholder-product-3.jpg",
-  ],
+  ]),
   categoryId: "1",
-  categoryName: "Örtü",
-  deliveryDays: 7,
-  isFeatured: true,
+  deliveryTime: "7 gün",
+  tags: null,
+  instagramPostId: null,
   isActive: true,
+  whatsappText: null,
   createdAt: "2025-01-01T00:00:00Z",
+  updatedAt: "2025-01-01T00:00:00Z",
 };
 
 const relatedPlaceholder: Product[] = [
@@ -49,13 +51,15 @@ const relatedPlaceholder: Product[] = [
     description: "",
     price: 65000,
     thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
+    images: null,
     categoryId: "2",
-    categoryName: "Dantel",
-    deliveryDays: 5,
-    isFeatured: true,
+    deliveryTime: "5 gün",
+    tags: null,
+    instagramPostId: null,
     isActive: true,
+    whatsappText: null,
     createdAt: "2025-01-02T00:00:00Z",
+    updatedAt: "2025-01-02T00:00:00Z",
   },
   {
     id: "3",
@@ -64,13 +68,15 @@ const relatedPlaceholder: Product[] = [
     description: "",
     price: 120000,
     thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
+    images: null,
     categoryId: "3",
-    categoryName: "Bohça",
-    deliveryDays: 10,
-    isFeatured: true,
+    deliveryTime: "10 gün",
+    tags: null,
+    instagramPostId: null,
     isActive: true,
+    whatsappText: null,
     createdAt: "2025-01-03T00:00:00Z",
+    updatedAt: "2025-01-03T00:00:00Z",
   },
   {
     id: "4",
@@ -79,13 +85,15 @@ const relatedPlaceholder: Product[] = [
     description: "",
     price: 45000,
     thumbnailUrl: "/images/placeholder-product.jpg",
-    images: [],
+    images: null,
     categoryId: "4",
-    categoryName: "Havlu",
-    deliveryDays: 3,
-    isFeatured: false,
+    deliveryTime: "3 gün",
+    tags: null,
+    instagramPostId: null,
     isActive: true,
+    whatsappText: null,
     createdAt: "2025-01-04T00:00:00Z",
+    updatedAt: "2025-01-04T00:00:00Z",
   },
 ];
 
@@ -100,7 +108,7 @@ export function ProductDetailClient({ slug }: { slug: string }) {
     queryKey: ["product", slug],
     queryFn: async () => {
       const response = await productsApi.getBySlug(slug);
-      return response.data;
+      return response.product;
     },
     placeholderData: placeholderProduct,
     retry: false,
@@ -108,16 +116,40 @@ export function ProductDetailClient({ slug }: { slug: string }) {
 
   const product = productData ?? placeholderProduct;
 
+  const { data: categoriesRes } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => categoriesApi.getAll(),
+  });
+
+  const categoryName = useMemo(() => {
+    if (!product.categoryId) return "";
+    return categoriesRes?.categories?.find((c) => c.id === product.categoryId)?.name ?? "";
+  }, [product.categoryId, categoriesRes]);
+
+  const parsedImages: string[] = useMemo(() => {
+    if (!product.images) return [];
+    try {
+      const parsed = JSON.parse(product.images);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }, [product.images]);
+
   const images =
-    product.images.length > 0
-      ? product.images
-      : [product.thumbnailUrl, product.thumbnailUrl, product.thumbnailUrl];
+    parsedImages.length > 0
+      ? parsedImages
+      : [
+          product.thumbnailUrl || "/images/placeholder-product.jpg",
+          product.thumbnailUrl || "/images/placeholder-product.jpg",
+          product.thumbnailUrl || "/images/placeholder-product.jpg",
+        ];
 
   const formattedPrice = (product.price / 100).toLocaleString("tr-TR", {
     minimumFractionDigits: 2,
   });
 
-  const whatsappMessage = `Merhaba! "${product.title}" ürünüyle ilgileniyorum. Sipariş vermek istiyorum.`;
+  const whatsappMessage = product.whatsappText || `Merhaba! "${product.title}" ürünüyle ilgileniyorum. Sipariş vermek istiyorum.`;
 
   function handlePrevImage() {
     setActiveImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -154,7 +186,7 @@ export function ProductDetailClient({ slug }: { slug: string }) {
                   className="relative h-full w-full"
                 >
                   <Image
-                    src={images[activeImage]}
+                    src={images[activeImage] || "/images/placeholder-product.jpg"}
                     alt={product.title}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -219,9 +251,11 @@ export function ProductDetailClient({ slug }: { slug: string }) {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col"
           >
-            <p className="text-sm font-medium uppercase tracking-wider text-primary">
-              {product.categoryName}
-            </p>
+            {categoryName && (
+              <p className="text-sm font-medium uppercase tracking-wider text-primary">
+                {categoryName}
+              </p>
+            )}
 
             <h1 className="mt-2 font-heading text-3xl font-bold sm:text-4xl">
               {product.title}
@@ -232,19 +266,21 @@ export function ProductDetailClient({ slug }: { slug: string }) {
             </p>
 
             {/* Delivery info */}
-            <div className="mt-6 inline-flex items-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm">
-              <Truck className="size-4 text-muted-foreground" />
-              <span className="text-muted-foreground">
-                {t("deliveryTime")}:
-              </span>
-              <span className="font-semibold">
-                {product.deliveryDays} gün
-              </span>
-            </div>
+            {product.deliveryTime && (
+              <div className="mt-6 inline-flex items-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm">
+                <Truck className="size-4 text-muted-foreground" />
+                <span className="text-muted-foreground">
+                  {t("deliveryTime")}:
+                </span>
+                <span className="font-semibold">
+                  {product.deliveryTime}
+                </span>
+              </div>
+            )}
 
             {/* Description */}
             <div className="mt-6 space-y-3 text-sm leading-relaxed text-muted-foreground">
-              {product.description.split("\n").map((line, i) => (
+              {(product.description ?? "").split("\n").map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
             </div>
@@ -267,7 +303,7 @@ export function ProductDetailClient({ slug }: { slug: string }) {
                     title: product.title,
                     slug: product.slug,
                     price: product.price,
-                    thumbnailUrl: product.thumbnailUrl,
+                    thumbnailUrl: product.thumbnailUrl || "/images/placeholder-product.jpg",
                   })
                 }
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-border px-8 py-4 text-base font-semibold transition-all hover:bg-muted"
@@ -285,9 +321,24 @@ export function ProductDetailClient({ slug }: { slug: string }) {
             {t("relatedProducts")}
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-            {relatedPlaceholder.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+            {relatedPlaceholder.map((p) => {
+              const catName = p.categoryId
+                ? categoriesRes?.categories?.find((c) => c.id === p.categoryId)?.name ?? ""
+                : "";
+              return (
+                <ProductCard
+                  key={p.id}
+                  product={{
+                    id: p.id,
+                    title: p.title,
+                    slug: p.slug,
+                    price: p.price / 100,
+                    thumbnailUrl: p.thumbnailUrl || "/images/placeholder-product.jpg",
+                    categoryName: catName,
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

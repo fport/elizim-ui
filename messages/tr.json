@@ -15,7 +15,14 @@
     "title": "El İşçiliği ile Evinize Değer Katıyoruz",
     "subtitle": "Karabük'ten el emeği, göz nuru özel tasarım ev tekstili ürünleri",
     "cta": "Ürünleri Keşfet",
-    "ctaSecondary": "Hakkımızda"
+    "ctaSecondary": "Hakkımızda",
+    "stat1": "El Yapımı",
+    "stat2": "Hızlı Kargo",
+    "stat3": "Karabük'ten",
+    "cat1": "Nakış",
+    "cat2": "Dantel",
+    "cat3": "Bohça",
+    "cat4": "Örtü"
   },
   "categories": {
     "title": "Kategoriler",
@@ -24,27 +31,26 @@
   "featured": {
     "title": "Öne Çıkan Ürünler",
     "subtitle": "En çok beğenilen el işi ürünlerimiz",
-    "viewAll": "Tümünü Gör"
+    "viewAll": "Tümünü Gör",
+    "item1Name": "İşlemeli Bohça",
+    "item1Cat": "Bohça",
+    "item2Name": "Dantel Yolluk",
+    "item2Cat": "Dantel",
+    "item3Name": "Nakışlı Masa Örtüsü",
+    "item3Cat": "Nakış",
+    "item4Name": "İşlemeli Havlu Seti",
+    "item4Cat": "Havlu"
   },
   "instagram": {
     "title": "Instagram'da Biz",
     "subtitle": "Atölyemizden kareler ve yeni tasarımlar",
     "follow": "Takip Et"
   },
-  "features": {
-    "title": "Neden Elizim?",
-    "quality": {
-      "title": "El İşçiliği Kalitesi",
-      "description": "Her ürün özenle, geleneksel tekniklerle el emeğiyle üretilir"
-    },
-    "design": {
-      "title": "Özel Tasarım",
-      "description": "İsteğinize göre kişiselleştirilmiş benzersiz tasarımlar"
-    },
-    "delivery": {
-      "title": "Hızlı Teslimat",
-      "description": "Türkiye'nin her yerine güvenli ve hızlı kargo"
-    }
+  "trustStrip": {
+    "handmade": "El Yapımı Üretim",
+    "custom": "Özel Tasarım",
+    "shipping": "Hızlı Kargo",
+    "secure": "Güvenli Alışveriş"
   },
   "testimonials": {
     "title": "Müşterilerimiz Ne Diyor?",
