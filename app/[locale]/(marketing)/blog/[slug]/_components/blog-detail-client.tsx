@@ -6,50 +6,22 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { ArrowLeft, Calendar, User, Globe } from "lucide-react";
 import { blogApi, type BlogPost } from "@/lib/api";
 
-const placeholderPost: BlogPost = {
-  id: "1",
-  title: "Nakış Sanatının Tarihçesi ve Anadolu'daki Yeri",
-  slug: "nakis-sanatinin-tarihcesi",
-  excerpt:
-    "Binlerce yıllık geçmişe sahip nakış sanatı, Anadolu kültüründe önemli bir yere sahiptir.",
-  content: `
-<h2>Nakış Sanatının Kökenleri</h2>
-<p>Nakış, insanlık tarihinin en eski el sanatlarından biridir. Anadolu topraklarında binlerce yıldır sürdürülen bu gelenek, nesilden nesile aktarılarak günümüze kadar ulaşmıştır.</p>
-
-<h2>Anadolu Nakış Geleneği</h2>
-<p>Anadolu'nun her bölgesinde kendine özgü nakış teknikleri ve motifleri gelişmiştir. Karabük ve çevresi de bu zengin geleneğin önemli merkezlerinden biridir. Yöresel motifler, doğadan ve günlük yaşamdan ilham alarak şekillenmiştir.</p>
-
-<h3>Kullanılan Teknikler</h3>
-<ul>
-  <li>Çapraz iğne (kanaviçe)</li>
-  <li>Düz iğne nakışı</li>
-  <li>Türk işi</li>
-  <li>Hesap işi</li>
-</ul>
-
-<h2>Günümüzde Nakış</h2>
-<p>Modern tasarım anlayışı ile geleneksel tekniklerin buluşması, nakış sanatına yeni bir soluk getirmektedir. Elizim olarak biz de bu geleneği yaşatırken, çağdaş tasarımlarla harmanlıyoruz.</p>
-
-<blockquote>
-  <p>"El işçiliği, bir kültürün en samimi ifadesidir. Her dikiş, her ilmek bir hikaye anlatır."</p>
-</blockquote>
-
-<p>Atölyemizde ürettiğimiz her ürün, bu köklü geleneğin izlerini taşır. Geleneksel motifleri modern çizgilerle buluşturarak, hem nostaljik hem de çağdaş ürünler ortaya koyuyoruz.</p>
-  `.trim(),
-  category: null,
-  tags: null,
-  imageUrl: "/images/placeholder-blog.jpg",
-  locale: "tr",
-  isPublished: true,
-  publishedAt: "2025-01-15T10:00:00Z",
-  createdAt: "2025-01-15T10:00:00Z",
-  updatedAt: "2025-01-15T10:00:00Z",
+const localeLabels: Record<string, string> = {
+  tr: "Turkce",
+  en: "English",
+  ar: "العربية",
 };
 
-export function BlogDetailClient({ slug }: { slug: string }) {
+interface BlogDetailProps {
+  slug: string;
+  initialPost: BlogPost | null;
+  translations: { locale: string; slug: string; title: string }[];
+}
+
+export function BlogDetailClient({ slug, initialPost, translations }: BlogDetailProps) {
   const t = useTranslations("blog");
   const locale = useLocale();
 
@@ -59,11 +31,26 @@ export function BlogDetailClient({ slug }: { slug: string }) {
       const response = await blogApi.getBySlug(slug);
       return response.post;
     },
-    placeholderData: placeholderPost,
-    retry: false,
+    initialData: initialPost ?? undefined,
+    staleTime: 60_000,
   });
 
-  const post = postData ?? placeholderPost;
+  const post = postData ?? initialPost;
+
+  if (!post) {
+    return (
+      <div className="px-4 py-20 text-center">
+        <h1 className="text-2xl font-bold">{t("notFound")}</h1>
+        <Link
+          href="/blog"
+          className="mt-4 inline-flex items-center gap-2 text-sm text-primary"
+        >
+          <ArrowLeft className="size-4" />
+          {t("backToBlog")}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <article className="px-4 py-12 sm:py-20">
@@ -78,21 +65,23 @@ export function BlogDetailClient({ slug }: { slug: string }) {
         </Link>
 
         {/* Cover image */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative mb-8 aspect-video overflow-hidden rounded-2xl bg-muted"
-        >
-          <Image
-            src={post.imageUrl || "/images/placeholder-blog.jpg"}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            className="object-cover"
-            priority
-          />
-        </motion.div>
+        {post.imageUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative mb-8 aspect-video overflow-hidden rounded-2xl bg-muted"
+          >
+            <Image
+              src={post.imageUrl}
+              alt={post.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 768px"
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+        )}
 
         {/* Meta */}
         <motion.div
@@ -114,7 +103,7 @@ export function BlogDetailClient({ slug }: { slug: string }) {
           </span>
           <span className="inline-flex items-center gap-1.5">
             <User className="size-4" />
-            Elizim Atölye
+            Elizim Atolye
           </span>
         </motion.div>
 
@@ -128,20 +117,64 @@ export function BlogDetailClient({ slug }: { slug: string }) {
           {post.title}
         </motion.h1>
 
+        {/* Language switcher */}
+        {translations.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="mt-4 flex items-center gap-2"
+          >
+            <Globe className="size-3.5 text-muted-foreground" />
+            {translations.map((tr) => (
+              <Link
+                key={tr.locale}
+                href={{
+                  pathname: "/blog/[slug]",
+                  params: { slug: tr.slug },
+                }}
+                locale={tr.locale}
+                className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                {localeLabels[tr.locale] || tr.locale}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+
         {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
           className="blog-content mt-8"
           dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
         />
+
+        {/* Tags */}
+        {post.tags && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="mt-8 flex flex-wrap gap-2"
+          >
+            {post.tags.split(",").map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+              >
+                {tag.trim()}
+              </span>
+            ))}
+          </motion.div>
+        )}
 
         {/* Bottom navigation */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
           className="mt-16 border-t border-border pt-8"
         >
           <Link

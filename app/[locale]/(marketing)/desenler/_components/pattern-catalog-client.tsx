@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
@@ -11,25 +12,22 @@ import {
   X,
   ArrowUpDown,
   PackageSearch,
-  Flame,
-  Tag,
-  Star,
-  Heart,
-  Sparkles,
+  FileType,
+  BarChart3,
 } from "lucide-react";
-import { productsApi, categoriesApi, ProductTag } from "@/lib/api";
-import { ProductCard } from "@/components/marketing/product-card";
+import { Link } from "@/i18n/routing";
+import { patternsApi, categoriesApi } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-type SortOption = "newest" | "price-asc" | "price-desc";
+type SortOption = "newest" | "price-asc" | "price-desc" | "popular";
 
-const TAG_ICONS: Record<ProductTag, typeof Flame> = {
-  [ProductTag.BEST_SELLER]: Flame,
-  [ProductTag.GOOD_PRICE]: Tag,
-  [ProductTag.PRODUCT_OF_MONTH]: Star,
-  [ProductTag.RECOMMENDED]: Heart,
-  [ProductTag.NEW]: Sparkles,
+const DIFFICULTY_COLORS: Record<string, string> = {
+  Kolay: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  Orta: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+  Zor: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
+
+const DIFFICULTY_VALUES = ["Kolay", "Orta", "Zor"] as const;
 
 /* ─── Bottom Sheet ─── */
 function BottomSheet({
@@ -45,7 +43,6 @@ function BottomSheet({
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  // Lock body scroll when open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -61,17 +58,14 @@ function BottomSheet({
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/40 overlay-enter"
         onClick={onClose}
       />
-      {/* Sheet */}
       <div
         ref={sheetRef}
         className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-background sheet-enter"
       >
-        {/* Handle */}
         <div className="sticky top-0 z-10 bg-background px-4 pb-2 pt-3">
           <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted-foreground/20" />
           <div className="flex items-center justify-between">
@@ -91,12 +85,12 @@ function BottomSheet({
 }
 
 /* ─── Main Catalog ─── */
-export function ProductCatalogClient() {
-  const t = useTranslations("products");
-  const tTags = useTranslations("productTags");
+export function PatternCatalogClient() {
+  const t = useTranslations("patterns");
+  const tCommon = useTranslations("common");
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedTag, setSelectedTag] = useState<ProductTag | "">("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [sort, setSort] = useState<SortOption>("newest");
   const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [showSortSheet, setShowSortSheet] = useState(false);
@@ -116,10 +110,10 @@ export function ProductCatalogClient() {
     }
   }, [showDesktopSort]);
 
-  const { data: productsRes, isLoading: productsLoading } = useQuery({
-    queryKey: ["products", selectedCategory, sort],
+  const { data: patternsRes, isLoading: patternsLoading } = useQuery({
+    queryKey: ["patterns", selectedCategory, sort],
     queryFn: () =>
-      productsApi.getAll({
+      patternsApi.getAll({
         category: selectedCategory || undefined,
         sort,
       }),
@@ -130,12 +124,12 @@ export function ProductCatalogClient() {
     queryFn: () => categoriesApi.getAll(),
   });
 
-  const products = productsRes?.products ?? [];
+  const patterns = patternsRes?.patterns ?? [];
   const categories = categoriesRes?.categories ?? [];
 
-  // Client-side search + tag filter
-  const filteredProducts = useMemo(() => {
-    let result = products;
+  // Client-side search + difficulty filter
+  const filteredPatterns = useMemo(() => {
+    let result = patterns;
 
     if (search.trim()) {
       const query = search.toLowerCase();
@@ -143,41 +137,39 @@ export function ProductCatalogClient() {
         (p) =>
           p.title.toLowerCase().includes(query) ||
           (p.description?.toLowerCase().includes(query) ?? false) ||
-          (p.tags?.toLowerCase().includes(query) ?? false),
+          (p.tags?.toLowerCase().includes(query) ?? false) ||
+          p.formats.toLowerCase().includes(query),
       );
     }
 
-    if (selectedTag) {
-      result = result.filter((p) => p.productTag === selectedTag);
+    if (selectedDifficulty) {
+      result = result.filter((p) => p.difficulty === selectedDifficulty);
     }
 
     return result;
-  }, [products, search, selectedTag]);
-
-  const getCategoryName = useCallback(
-    (categoryId: string | null) => {
-      if (!categoryId) return "";
-      return categories.find((c) => c.id === categoryId)?.name ?? "";
-    },
-    [categories],
-  );
+  }, [patterns, search, selectedDifficulty]);
 
   const sortLabels: Record<SortOption, string> = {
     newest: t("sortNewest"),
     "price-asc": t("sortPriceAsc"),
     "price-desc": t("sortPriceDesc"),
+    popular: t("sortPopular"),
+  };
+
+  const difficultyLabels: Record<string, string> = {
+    Kolay: t("difficultyEasy"),
+    Orta: t("difficultyMedium"),
+    Zor: t("difficultyHard"),
   };
 
   const activeFilterCount =
-    (selectedCategory ? 1 : 0) + (selectedTag ? 1 : 0);
+    (selectedCategory ? 1 : 0) + (selectedDifficulty ? 1 : 0);
 
   const clearAllFilters = () => {
     setSelectedCategory("");
-    setSelectedTag("");
+    setSelectedDifficulty("");
     setSearch("");
   };
-
-  const tagValues = Object.values(ProductTag);
 
   return (
     <section className="min-h-screen pb-20">
@@ -214,7 +206,6 @@ export function ProductCatalogClient() {
 
           {/* Filter + Sort Row (Mobile) */}
           <div className="flex items-center gap-2 pb-3 md:hidden">
-            {/* Filter Button */}
             <button
               onClick={() => setShowFilterSheet(true)}
               className={cn(
@@ -234,7 +225,6 @@ export function ProductCatalogClient() {
               )}
             </button>
 
-            {/* Sort Button */}
             <button
               onClick={() => setShowSortSheet(true)}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-background py-2.5 text-sm font-medium transition-all"
@@ -288,7 +278,7 @@ export function ProductCatalogClient() {
               {/* Sort - Desktop */}
               <div>
                 <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("sortBy")}
+                  {t("sort")}
                 </h4>
                 <div ref={sortRef} className="relative">
                   <button
@@ -336,43 +326,42 @@ export function ProductCatalogClient() {
                 </div>
               </div>
 
-              {/* Tags Filter - Desktop */}
+              {/* Difficulty Filter - Desktop */}
               <div>
                 <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("tags")}
+                  {t("difficulty")}
                 </h4>
                 <div className="space-y-1">
                   <button
-                    onClick={() => setSelectedTag("")}
+                    onClick={() => setSelectedDifficulty("")}
                     className={cn(
                       "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
-                      !selectedTag
+                      !selectedDifficulty
                         ? "bg-muted font-semibold text-foreground"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
-                    {t("allTags")}
+                    {t("allCategories")}
                   </button>
-                  {tagValues.map((tag) => {
-                    const Icon = TAG_ICONS[tag];
-                    return (
-                      <button
-                        key={tag}
-                        onClick={() =>
-                          setSelectedTag(selectedTag === tag ? "" : tag)
-                        }
-                        className={cn(
-                          "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
-                          selectedTag === tag
-                            ? "bg-muted font-semibold text-foreground"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
-                        )}
-                      >
-                        <Icon className="size-3.5" />
-                        {tTags(tag)}
-                      </button>
-                    );
-                  })}
+                  {DIFFICULTY_VALUES.map((diff) => (
+                    <button
+                      key={diff}
+                      onClick={() =>
+                        setSelectedDifficulty(
+                          selectedDifficulty === diff ? "" : diff,
+                        )
+                      }
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
+                        selectedDifficulty === diff
+                          ? "bg-muted font-semibold text-foreground"
+                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                      )}
+                    >
+                      <BarChart3 className="size-3.5" />
+                      {difficultyLabels[diff]}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -394,9 +383,8 @@ export function ProductCatalogClient() {
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
-                  {t("resultCount", { count: filteredProducts.length })}
+                  {filteredPatterns.length} {t("resultCount")}
                 </span>
-                {/* Active filter pills */}
                 {activeFilterCount > 0 && (
                   <div className="hidden items-center gap-1.5 md:flex">
                     {selectedCategory && (
@@ -411,11 +399,11 @@ export function ProductCatalogClient() {
                         </button>
                       </span>
                     )}
-                    {selectedTag && (
+                    {selectedDifficulty && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                        {tTags(selectedTag)}
+                        {difficultyLabels[selectedDifficulty]}
                         <button
-                          onClick={() => setSelectedTag("")}
+                          onClick={() => setSelectedDifficulty("")}
                           className="rounded-full p-0.5 hover:bg-primary/20"
                         >
                           <X className="size-2.5" />
@@ -431,14 +419,14 @@ export function ProductCatalogClient() {
                   onClick={clearAllFilters}
                   className="text-xs font-medium text-primary hover:underline md:hidden"
                 >
-                  {t("clearFilters")}
+                  {t("clearAll")}
                 </button>
               )}
             </div>
 
-            {/* ─── Product Grid ─── */}
+            {/* ─── Pattern Grid ─── */}
             <AnimatePresence mode="wait">
-              {productsLoading ? (
+              {patternsLoading ? (
                 <motion.div
                   key="skeleton"
                   initial={{ opacity: 0 }}
@@ -447,17 +435,24 @@ export function ProductCatalogClient() {
                   className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
                 >
                   {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="overflow-hidden rounded-2xl border border-border/50">
+                    <div
+                      key={i}
+                      className="overflow-hidden rounded-2xl border border-border/50"
+                    >
                       <div className="aspect-square skeleton-shimmer" />
                       <div className="space-y-2 p-3">
-                        <div className="h-3 w-1/3 rounded skeleton-shimmer" />
+                        <div className="h-3 w-2/3 rounded skeleton-shimmer" />
                         <div className="h-4 w-3/4 rounded skeleton-shimmer" />
+                        <div className="flex gap-1">
+                          <div className="h-4 w-10 rounded skeleton-shimmer" />
+                          <div className="h-4 w-10 rounded skeleton-shimmer" />
+                        </div>
                         <div className="h-5 w-1/2 rounded skeleton-shimmer" />
                       </div>
                     </div>
                   ))}
                 </motion.div>
-              ) : filteredProducts.length === 0 ? (
+              ) : filteredPatterns.length === 0 ? (
                 <motion.div
                   key="empty"
                   initial={{ opacity: 0, y: 10 }}
@@ -491,32 +486,121 @@ export function ProductCatalogClient() {
                   exit={{ opacity: 0 }}
                   className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4"
                 >
-                  {filteredProducts.map((product, index) => (
-                    <motion.div
-                      key={product.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: Math.min(index * 0.03, 0.3),
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                    >
-                      <ProductCard
-                        product={{
-                          id: product.id,
-                          title: product.title,
-                          slug: product.slug,
-                          price: product.price / 100,
-                          thumbnailUrl:
-                            product.thumbnailUrl ||
-                            "/images/placeholder-product.jpg",
-                          categoryName: getCategoryName(product.categoryId),
-                          productTag: product.productTag,
+                  {filteredPatterns.map((pattern, index) => {
+                    const formattedPrice = (
+                      pattern.price / 100
+                    ).toLocaleString("tr-TR");
+                    const formats = pattern.formats
+                      .split(",")
+                      .map((f) => f.trim());
+
+                    return (
+                      <motion.div
+                        key={pattern.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: Math.min(index * 0.03, 0.3),
+                          ease: [0.25, 0.46, 0.45, 0.94],
                         }}
-                      />
-                    </motion.div>
-                  ))}
+                      >
+                        <Link
+                          href={{
+                            pathname: "/desenler/[slug]",
+                            params: { slug: pattern.slug },
+                          }}
+                          className={cn(
+                            "group relative flex flex-col overflow-hidden rounded-2xl",
+                            "bg-card border border-border/50",
+                            "transition-all duration-300",
+                            "hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20",
+                            "hover:-translate-y-0.5",
+                            "active:scale-[0.98]",
+                          )}
+                        >
+                          {/* Image */}
+                          <div className="relative aspect-square overflow-hidden bg-muted/30">
+                            <Image
+                              src={
+                                pattern.previewImageUrl ||
+                                "/images/placeholder-product.jpg"
+                              }
+                              alt={pattern.title}
+                              fill
+                              sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw"
+                              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                              style={{
+                                pointerEvents: "none",
+                                userSelect: "none",
+                              }}
+                              draggable={false}
+                              onContextMenu={(e) => e.preventDefault()}
+                            />
+
+                            {/* Watermark */}
+                            <div
+                              className="absolute inset-0 flex items-center justify-center"
+                              onContextMenu={(e) => e.preventDefault()}
+                            >
+                              <span className="rotate-[-30deg] select-none text-xl font-bold text-white/15 sm:text-2xl">
+                                elizim.art
+                              </span>
+                            </div>
+
+                            {/* Difficulty badge - top left */}
+                            {pattern.difficulty && (
+                              <span
+                                className={cn(
+                                  "absolute top-2 start-2 z-10",
+                                  "inline-flex items-center gap-1 rounded-lg px-2 py-1",
+                                  "text-[10px] font-bold uppercase tracking-wider",
+                                  "backdrop-blur-md shadow-sm",
+                                  DIFFICULTY_COLORS[pattern.difficulty] ||
+                                    "bg-muted text-foreground",
+                                )}
+                              >
+                                <BarChart3 className="size-3" />
+                                {difficultyLabels[pattern.difficulty] ||
+                                  pattern.difficulty}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex flex-1 flex-col gap-1.5 p-3">
+                            {/* Title */}
+                            <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-foreground sm:text-sm">
+                              {pattern.title}
+                            </h3>
+
+                            {/* Format badges */}
+                            <div className="flex flex-wrap gap-1">
+                              {formats.map((fmt) => (
+                                <span
+                                  key={fmt}
+                                  className="inline-flex items-center gap-0.5 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+                                >
+                                  <FileType className="size-2.5" />
+                                  {fmt}
+                                </span>
+                              ))}
+                            </div>
+
+                            {/* Price */}
+                            <div className="mt-auto flex items-baseline gap-1.5 pt-1">
+                              <span className="text-base font-bold text-foreground sm:text-lg">
+                                {formattedPrice}
+                              </span>
+                              <span className="text-xs font-semibold text-muted-foreground">
+                                {tCommon("currency")}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -533,7 +617,7 @@ export function ProductCatalogClient() {
         {/* Categories */}
         <div className="mb-6">
           <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            {t("categories")}
+            {t("allCategories")}
           </h4>
           <div className="flex flex-wrap gap-2">
             <button
@@ -568,43 +652,42 @@ export function ProductCatalogClient() {
           </div>
         </div>
 
-        {/* Tags */}
+        {/* Difficulty */}
         <div className="mb-6">
           <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            {t("tags")}
+            {t("difficulty")}
           </h4>
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setSelectedTag("")}
+              onClick={() => setSelectedDifficulty("")}
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium transition-all",
-                !selectedTag
+                !selectedDifficulty
                   ? "bg-foreground text-background"
                   : "bg-muted text-muted-foreground",
               )}
             >
-              {t("allTags")}
+              {t("allCategories")}
             </button>
-            {tagValues.map((tag) => {
-              const Icon = TAG_ICONS[tag];
-              return (
-                <button
-                  key={tag}
-                  onClick={() =>
-                    setSelectedTag(selectedTag === tag ? "" : tag)
-                  }
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all",
-                    selectedTag === tag
-                      ? "bg-foreground text-background"
-                      : "bg-muted text-muted-foreground",
-                  )}
-                >
-                  <Icon className="size-3.5" />
-                  {tTags(tag)}
-                </button>
-              );
-            })}
+            {DIFFICULTY_VALUES.map((diff) => (
+              <button
+                key={diff}
+                onClick={() =>
+                  setSelectedDifficulty(
+                    selectedDifficulty === diff ? "" : diff,
+                  )
+                }
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  selectedDifficulty === diff
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                <BarChart3 className="size-3.5" />
+                {difficultyLabels[diff]}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -625,7 +708,7 @@ export function ProductCatalogClient() {
             onClick={() => setShowFilterSheet(false)}
             className="flex-1 rounded-xl bg-foreground py-3 text-sm font-semibold text-background transition-colors"
           >
-            {t("resultCount", { count: filteredProducts.length })}
+            {filteredPatterns.length} {t("resultCount")}
           </button>
         </div>
       </BottomSheet>
@@ -634,7 +717,7 @@ export function ProductCatalogClient() {
       <BottomSheet
         open={showSortSheet}
         onClose={() => setShowSortSheet(false)}
-        title={t("sortBy")}
+        title={t("sort")}
       >
         <div className="space-y-1">
           {(Object.keys(sortLabels) as SortOption[]).map((option) => (

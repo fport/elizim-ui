@@ -53,6 +53,26 @@ export const routing = defineRouting({
       en: "/legal/kvkk",
       ar: "/legal/kvkk",
     },
+    "/desenler": {
+      tr: "/desenler",
+      en: "/patterns",
+      ar: "/patterns",
+    },
+    "/desenler/[slug]": {
+      tr: "/desenler/[slug]",
+      en: "/patterns/[slug]",
+      ar: "/patterns/[slug]",
+    },
+    "/ozel-tasarim": {
+      tr: "/ozel-tasarim",
+      en: "/custom-design",
+      ar: "/custom-design",
+    },
+    "/ozel-tasarim/[slug]": {
+      tr: "/ozel-tasarim/[slug]",
+      en: "/custom-design/[slug]",
+      ar: "/custom-design/[slug]",
+    },
   },
 });
 

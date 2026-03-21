@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
-type StaticPath = "/" | "/urunler" | "/hakkimizda" | "/iletisim" | "/blog" | "/sss" | "/fiyat-politikasi" | "/legal/gizlilik" | "/legal/kosullar" | "/legal/kvkk";
+type StaticPath = "/" | "/urunler" | "/desenler" | "/hakkimizda" | "/iletisim" | "/blog" | "/sss" | "/fiyat-politikasi" | "/legal/gizlilik" | "/legal/kosullar" | "/legal/kvkk";
 
 const INSTAGRAM_ACCOUNTS = [
   { handle: "@eliziiim", url: "https://instagram.com/eliziiim" },
@@ -20,6 +20,7 @@ export function Footer() {
 
   const quickLinks: { label: string; href: StaticPath }[] = [
     { label: tNav("products"), href: "/urunler" },
+    { label: tNav("patterns"), href: "/desenler" },
     { label: tNav("about"), href: "/hakkimizda" },
     { label: tNav("contact"), href: "/iletisim" },
     { label: tNav("blog"), href: "/blog" },

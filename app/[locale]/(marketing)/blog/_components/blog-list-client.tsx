@@ -9,57 +9,6 @@ import { motion } from "motion/react";
 import { Calendar, ArrowRight } from "lucide-react";
 import { blogApi, type BlogPost } from "@/lib/api";
 
-const placeholderPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Nakış Sanatının Tarihçesi ve Anadolu'daki Yeri",
-    slug: "nakis-sanatinin-tarihcesi",
-    excerpt:
-      "Binlerce yıllık geçmişe sahip nakış sanatı, Anadolu kültüründe önemli bir yere sahiptir. Bu yazıda nakışın tarihini ve günümüzdeki önemini keşfedin.",
-    content: "",
-    category: null,
-    tags: null,
-    imageUrl: "/images/placeholder-blog.jpg",
-    locale: "tr",
-    isPublished: true,
-    publishedAt: "2025-01-15T10:00:00Z",
-    createdAt: "2025-01-15T10:00:00Z",
-    updatedAt: "2025-01-15T10:00:00Z",
-  },
-  {
-    id: "2",
-    title: "El İşi Ürünlerin Bakımı: İpuçları ve Öneriler",
-    slug: "el-isi-urunlerin-bakimi",
-    excerpt:
-      "El işi ürünlerinizin ömrünü uzatmak için doğru bakım yöntemlerini öğrenin. Yıkama, kurutma ve saklama tavsiyeleri.",
-    content: "",
-    category: null,
-    tags: null,
-    imageUrl: "/images/placeholder-blog.jpg",
-    locale: "tr",
-    isPublished: true,
-    publishedAt: "2025-01-10T10:00:00Z",
-    createdAt: "2025-01-10T10:00:00Z",
-    updatedAt: "2025-01-10T10:00:00Z",
-  },
-  {
-    id: "3",
-    title: "2025 Çeyiz Trendleri: Modern ve Geleneksel Buluşması",
-    slug: "2025-ceyiz-trendleri",
-    excerpt:
-      "Bu yılın çeyiz trendlerini inceliyoruz. Modern çizgiler ile geleneksel motiflerin uyumu, yeni renk paletleri ve daha fazlası.",
-    content: "",
-    category: null,
-    tags: null,
-    imageUrl: "/images/placeholder-blog.jpg",
-    locale: "tr",
-    isPublished: true,
-    publishedAt: "2025-01-05T10:00:00Z",
-    createdAt: "2025-01-05T10:00:00Z",
-    updatedAt: "2025-01-05T10:00:00Z",
-  },
-];
-
 const containerVariants = {
   hidden: {},
   visible: {
@@ -79,7 +28,7 @@ const cardVariants = {
   },
 } as const;
 
-export function BlogListClient() {
+export function BlogListClient({ initialPosts }: { initialPosts: BlogPost[] }) {
   const t = useTranslations("blog");
   const locale = useLocale();
 
@@ -89,11 +38,11 @@ export function BlogListClient() {
       const response = await blogApi.getAll(locale);
       return response.posts;
     },
-    placeholderData: placeholderPosts,
-    retry: false,
+    initialData: initialPosts,
+    staleTime: 60_000,
   });
 
-  const posts = postsData ?? placeholderPosts;
+  const posts = postsData ?? initialPosts;
 
   return (
     <div className="px-4 py-12 sm:py-20">
@@ -110,6 +59,13 @@ export function BlogListClient() {
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">{t("subtitle")}</p>
         </motion.div>
+
+        {/* Empty state */}
+        {posts.length === 0 && (
+          <div className="py-20 text-center">
+            <p className="text-muted-foreground">{t("noPosts")}</p>
+          </div>
+        )}
 
         {/* Blog grid */}
         <motion.div
@@ -148,7 +104,7 @@ export function BlogListClient() {
                       </time>
                     )}
                     <span className="text-border">|</span>
-                    <span>Elizim Atölye</span>
+                    <span>Elizim Atolye</span>
                   </div>
 
                   <h2 className="font-heading text-xl font-bold leading-snug transition-colors group-hover:text-primary sm:text-2xl">
