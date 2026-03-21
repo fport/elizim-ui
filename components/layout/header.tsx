@@ -493,9 +493,9 @@ export function Header() {
                     {/* "Tümünü Gör" card */}
                     <Link
                       href={{
-                        pathname: activeTab === 1 ? "/desenler" : "/urunler",
+                        pathname: activeTab === 0 ? "/urunler" : activeTab === 1 ? "/desenler" : "/ozel-tasarim",
                         query:
-                          activeTab !== 1
+                          activeTab === 0
                             ? { category: currentTab.categories[activeCategory]?.slug }
                             : undefined,
                       }}
@@ -520,8 +520,8 @@ export function Header() {
                       <Link
                         key={cat.slug}
                         href={{
-                          pathname: activeTab === 1 ? "/desenler" : "/urunler",
-                          query: { category: cat.slug },
+                          pathname: activeTab === 0 ? "/urunler" : activeTab === 1 ? "/desenler" : "/ozel-tasarim",
+                          query: activeTab !== 2 ? { category: cat.slug } : undefined,
                         }}
                         onClick={closeMobileMenu}
                         className="flex flex-col items-center"

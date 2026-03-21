@@ -77,7 +77,7 @@ export function HeroSection() {
 
             <motion.p
               variants={childVariants}
-              className="mt-4 hidden max-w-lg text-base text-muted-foreground sm:block sm:text-lg"
+              className="mt-3 max-w-lg text-sm text-muted-foreground sm:mt-4 sm:text-lg"
             >
               {t("subtitle")}
             </motion.p>
