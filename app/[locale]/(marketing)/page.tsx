@@ -3,7 +3,7 @@ import { FeaturedProductsSection } from "./_components/featured-products-section
 import { TrustStripSection } from "./_components/trust-strip-section";
 import { CategoriesSection } from "./_components/categories-section";
 import { TestimonialSection } from "./_components/testimonial-section";
-import { InstagramFeedSection } from "./_components/instagram-feed-section";
+// import { InstagramFeedSection } from "./_components/instagram-feed-section";
 import { ContactCtaSection } from "./_components/contact-cta-section";
 
 export default function HomePage() {
@@ -15,7 +15,7 @@ export default function HomePage() {
       <CategoriesSection />
       <TestimonialSection />
       <ContactCtaSection />
-      <InstagramFeedSection />
+      {/* <InstagramFeedSection /> */}
     </>
   );
 }

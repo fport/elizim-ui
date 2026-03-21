@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { X, Minus, Plus, ShoppingBag, MessageCircle, Trash2 } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, MessageCircle, Trash2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cart-store";
 import { motion, AnimatePresence } from "motion/react";
@@ -22,11 +22,22 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const clearCart = useCartStore((s) => s.clearCart);
   const totalPrice = useCartStore((s) => s.totalPrice);
   const toWhatsAppUrl = useCartStore((s) => s.toWhatsAppUrl);
+  const lastAddedItemId = useCartStore((s) => s.lastAddedItemId);
   const [mounted, setMounted] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Show success banner when a new item is added
+  useEffect(() => {
+    if (lastAddedItemId && open) {
+      setShowBanner(true);
+      const timer = setTimeout(() => setShowBanner(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastAddedItemId, open]);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -107,6 +118,28 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               </button>
             </div>
 
+            {/* Success banner */}
+            <AnimatePresence>
+              {showBanner && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex items-center gap-2 bg-emerald-50 px-5 py-3 dark:bg-emerald-950/30">
+                    <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+                      <Check className="size-3.5" strokeWidth={3} />
+                    </div>
+                    <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+                      {t("itemAdded")}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Items */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {items.length === 0 ? (
@@ -117,9 +150,17 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               ) : (
                 <ul className="space-y-4">
                   {items.map((item) => (
-                    <li
+                    <motion.li
                       key={item.id}
-                      className="flex gap-3 rounded-xl border border-border bg-card p-3"
+                      layout
+                      initial={item.id === lastAddedItemId ? { scale: 0.95, opacity: 0 } : false}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className={cn(
+                        "flex gap-3 rounded-xl border p-3 transition-colors duration-700",
+                        item.id === lastAddedItemId
+                          ? "border-emerald-400 bg-emerald-50/50 dark:border-emerald-600 dark:bg-emerald-950/20"
+                          : "border-border bg-card",
+                      )}
                     >
                       {/* Thumbnail */}
                       <div className="relative size-20 shrink-0 overflow-hidden rounded-lg">
@@ -191,7 +232,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                           </button>
                         </div>
                       </div>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               )}

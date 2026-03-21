@@ -68,7 +68,9 @@
     "empty": "سلتك فارغة",
     "total": "المجموع",
     "order": "اطلب عبر واتساب",
-    "continueShopping": "متابعة التسوق"
+    "continueShopping": "متابعة التسوق",
+    "addedToCart": "تمت الإضافة إلى السلة",
+    "itemAdded": "تمت إضافة المنتج إلى سلتك"
   },
   "products": {
     "title": "منتجاتنا",

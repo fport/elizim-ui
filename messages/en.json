@@ -68,7 +68,9 @@
     "empty": "Your cart is empty",
     "total": "Total",
     "order": "Order via WhatsApp",
-    "continueShopping": "Continue Shopping"
+    "continueShopping": "Continue Shopping",
+    "addedToCart": "Added to cart",
+    "itemAdded": "Item added to your cart"
   },
   "products": {
     "title": "Our Products",

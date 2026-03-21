@@ -13,10 +13,14 @@ export interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  isOpen: boolean;
+  lastAddedItemId: string | null;
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  openCart: () => void;
+  closeCart: () => void;
   totalPrice: () => number;
   totalItems: () => number;
   toWhatsAppMessage: () => string;
@@ -27,6 +31,8 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      isOpen: false,
+      lastAddedItemId: null,
 
       addItem: (item) =>
         set((state) => {
@@ -36,9 +42,15 @@ export const useCartStore = create<CartState>()(
               items: state.items.map((i) =>
                 i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
               ),
+              isOpen: true,
+              lastAddedItemId: item.id,
             };
           }
-          return { items: [...state.items, { ...item, quantity: 1 }] };
+          return {
+            items: [...state.items, { ...item, quantity: 1 }],
+            isOpen: true,
+            lastAddedItemId: item.id,
+          };
         }),
 
       removeItem: (id) =>
@@ -60,6 +72,9 @@ export const useCartStore = create<CartState>()(
 
       clearCart: () => set({ items: [] }),
 
+      openCart: () => set({ isOpen: true }),
+      closeCart: () => set({ isOpen: false, lastAddedItemId: null }),
+
       totalPrice: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
 
@@ -79,6 +94,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "elizim-cart",
+      partialize: (state) => ({ items: state.items }),
     },
   ),
 );

@@ -68,7 +68,9 @@
     "empty": "Sepetiniz boş",
     "total": "Toplam",
     "order": "WhatsApp ile Sipariş Ver",
-    "continueShopping": "Alışverişe Devam"
+    "continueShopping": "Alışverişe Devam",
+    "addedToCart": "Sepete eklendi",
+    "itemAdded": "Ürün sepetinize eklendi"
   },
   "products": {
     "title": "Ürünlerimiz",

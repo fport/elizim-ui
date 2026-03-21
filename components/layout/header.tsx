@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/routing";
@@ -10,6 +10,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { LocaleSwitcher } from "@/components/marketing/locale-switcher";
 import { CartDrawer } from "@/components/marketing/cart-drawer";
 import Image from "next/image";
+import { motion, AnimatePresence } from "motion/react";
 
 const NAV_ITEMS = [
   { key: "products", href: "/urunler" },
@@ -23,11 +24,16 @@ export function Header() {
   const tHero = useTranslations("hero");
   const pathname = usePathname();
   const totalItems = useCartStore((s) => s.totalItems);
+  const cartOpen = useCartStore((s) => s.isOpen);
+  const openCart = useCartStore((s) => s.openCart);
+  const closeCart = useCartStore((s) => s.closeCart);
+  const lastAddedItemId = useCartStore((s) => s.lastAddedItemId);
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [bounce, setBounce] = useState(false);
+  const prevItemCount = useRef(0);
 
   useEffect(() => {
     setMounted(true);
@@ -60,8 +66,25 @@ export function Header() {
     };
   }, [mobileOpen]);
 
-  const handleCartOpen = useCallback(() => setCartOpen(true), []);
-  const handleCartClose = useCallback(() => setCartOpen(false), []);
+  // Bounce cart icon when a new item is added
+  useEffect(() => {
+    if (!mounted) return;
+    const currentCount = totalItems();
+    if (currentCount > prevItemCount.current) {
+      setBounce(true);
+      const timer = setTimeout(() => setBounce(false), 600);
+      return () => clearTimeout(timer);
+    }
+    prevItemCount.current = currentCount;
+  }, [lastAddedItemId, mounted, totalItems]);
+
+  // Keep prevItemCount in sync
+  useEffect(() => {
+    if (mounted) prevItemCount.current = totalItems();
+  }, [cartOpen, mounted, totalItems]);
+
+  const handleCartOpen = useCallback(() => openCart(), [openCart]);
+  const handleCartClose = useCallback(() => closeCart(), [closeCart]);
 
   const itemCount = mounted ? totalItems() : 0;
 
@@ -118,8 +141,10 @@ export function Header() {
             <ModeToggle />
 
             {/* Cart button */}
-            <button
+            <motion.button
               onClick={handleCartOpen}
+              animate={bounce ? { scale: [1, 1.3, 0.9, 1.1, 1] } : {}}
+              transition={{ duration: 0.5 }}
               className={cn(
                 "relative inline-flex size-9 items-center justify-center rounded-lg",
                 "border border-border bg-background text-muted-foreground",
@@ -129,18 +154,23 @@ export function Header() {
               aria-label={`Cart (${itemCount} items)`}
             >
               <ShoppingBag className="size-4" />
-              {itemCount > 0 && (
-                <span
-                  className={cn(
-                    "absolute -end-1 -top-1 flex size-4 items-center justify-center",
-                    "rounded-full bg-primary text-[10px] font-bold text-primary-foreground",
-                    "animate-in zoom-in duration-200",
-                  )}
-                >
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
-            </button>
+              <AnimatePresence>
+                {itemCount > 0 && (
+                  <motion.span
+                    key={itemCount}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className={cn(
+                      "absolute -end-1 -top-1 flex size-4 items-center justify-center",
+                      "rounded-full bg-primary text-[10px] font-bold text-primary-foreground",
+                    )}
+                  >
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
 
             {/* CTA button - desktop */}
             <Link
