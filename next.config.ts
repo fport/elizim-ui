@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "images.elizim.art",
+      },
+      {
+        protocol: "https",
         hostname: "*.r2.dev",
       },
       {
