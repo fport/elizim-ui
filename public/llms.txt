@@ -1,0 +1,30 @@
+# Elizim
+
+> Handcrafted home textile products from Karabuk, Turkey. Embroidery, lace, gift wraps and more.
+
+Elizim is a handmade home textile brand based in Karabuk, Turkey. We specialize in custom-designed embroidery, lace, gift wraps (bohca), and other traditional Turkish textile crafts.
+
+## Pages
+
+- [Home](https://elizim.art/tr): Ana sayfa
+- [Products](https://elizim.art/tr/urunler): Browse all handcrafted products
+- [Patterns](https://elizim.art/tr/desenler): Explore embroidery and design patterns
+- [Custom Design](https://elizim.art/tr/ozel-tasarim): Order custom-made textile products
+- [About Us](https://elizim.art/tr/hakkimizda): Our story and values
+- [Contact](https://elizim.art/tr/iletisim): Get in touch with us
+- [Blog](https://elizim.art/tr/blog): Articles about textile crafts and news
+- [FAQ](https://elizim.art/tr/sss): Frequently asked questions
+- [Pricing Policy](https://elizim.art/tr/fiyat-politikasi): Our pricing information
+
+## Languages
+
+The site is available in three languages:
+- Turkish (tr) - default: https://elizim.art/tr
+- English (en): https://elizim.art/en
+- Arabic (ar): https://elizim.art/ar
+
+## Contact
+
+- Phone: +90 544 861 14 79
+- Instagram: @eliziiim, @karabuknakis, @desen.im
+- Location: Karabuk, Turkey

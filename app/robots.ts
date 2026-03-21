@@ -6,9 +6,10 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/"],
+        disallow: ["/api/", "/_next/"],
       },
     ],
     sitemap: "https://elizim.art/sitemap.xml",
+    host: "https://elizim.art",
   };
 }

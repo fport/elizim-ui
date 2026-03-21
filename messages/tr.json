@@ -62,10 +62,45 @@
     "title": "Müşterilerimiz Ne Diyor?",
     "subtitle": "Memnun müşterilerimizin deneyimleri"
   },
+  "customDesignCta": {
+    "badge": "Ozel Tasarım",
+    "title": "Hayalinizdeki Tasarımı Birlikte Oluşturalım",
+    "description": "Sevdikleriniz için özel günlere uygun, kişiselleştirilmiş kıyafet tasarımları yapıyoruz. Siz hayal edin, biz tasarlayalım.",
+    "feature1": "Tamamen kişiye özel tasarım",
+    "feature2": "Doğum günü, sevgililer günü, mezuniyet ve daha fazlası",
+    "feature3": "WhatsApp ile kolay sipariş",
+    "cta": "Tasarım Oluştur"
+  },
   "contactCta": {
     "title": "Sipariş Vermek İster Misiniz?",
     "subtitle": "WhatsApp üzerinden kolayca sipariş verin",
     "cta": "WhatsApp ile İletişime Geç"
+  },
+  "promoSection": {
+    "spring": {
+      "ticker": "Bahar Koleksiyonu Geldi",
+      "badge": "Mart'a Özel",
+      "title": "Bahar Koleksiyonunda",
+      "highlight": "%15 İndirim",
+      "description": "Yeni sezon nakış, dantel ve bohça ürünlerinde el emeğinin güzelliğini özel fiyatlarla keşfedin.",
+      "cta": "Koleksiyonu Keşfet"
+    },
+    "gift": {
+      "ticker": "Hediye Seti Kampanyası",
+      "badge": "Sınırlı Süre",
+      "title": "Hediye Setlerinde",
+      "highlight": "2 Al 1 Öde",
+      "description": "El yapımı hediye setleriyle sevdiklerinize anlam katın. Hediye paketleme bizden.",
+      "cta": "Setleri İncele"
+    },
+    "flash": {
+      "ticker": "Son Fırsatlar — Kaçırmayın",
+      "badge": "Son 3 Gün",
+      "title": "Seçili Ürünlerde",
+      "highlight": "%25'e Varan İndirim",
+      "description": "Sezon sonu fırsatlarıyla el işi ürünlere sahip olma şansını yakalayın.",
+      "cta": "Fırsatları Gör"
+    }
   },
   "cart": {
     "title": "Sepetim",

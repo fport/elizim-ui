@@ -195,12 +195,16 @@ export function ArticleJsonLd({
 
 /* ── Website ── */
 
-export function WebsiteJsonLd() {
+export function WebsiteJsonLd({ locale = "tr" }: { locale?: string }) {
+  const productPath =
+    locale === "tr" ? "/urunler" : "/products";
+
   const data = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Elizim",
-    url: "https://elizim.art",
+    url: `https://elizim.art/${locale}`,
+    inLanguage: locale === "tr" ? "tr-TR" : locale === "ar" ? "ar-SA" : "en-US",
     description:
       "El isciligi ile ozel tasarim ev tekstili urunleri",
     publisher: {
@@ -210,7 +214,7 @@ export function WebsiteJsonLd() {
     },
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://elizim.art/urunler?search={search_term_string}",
+      target: `https://elizim.art/${locale}${productPath}?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

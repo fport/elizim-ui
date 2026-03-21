@@ -62,10 +62,45 @@
     "title": "What Our Customers Say",
     "subtitle": "Experiences from our satisfied customers"
   },
+  "customDesignCta": {
+    "badge": "Custom Design",
+    "title": "Let's Create Your Dream Design Together",
+    "description": "We create personalized clothing designs for your loved ones, tailored for special occasions. You dream it, we design it.",
+    "feature1": "Fully personalized design",
+    "feature2": "Birthday, Valentine's, graduation and more",
+    "feature3": "Easy ordering via WhatsApp",
+    "cta": "Create a Design"
+  },
   "contactCta": {
     "title": "Would You Like to Place an Order?",
     "subtitle": "Easily order via WhatsApp",
     "cta": "Contact via WhatsApp"
+  },
+  "promoSection": {
+    "spring": {
+      "ticker": "Spring Collection Has Arrived",
+      "badge": "March Special",
+      "title": "Spring Collection",
+      "highlight": "15% Off",
+      "description": "Explore new season embroidery, lace and gift wraps at special handcraft prices.",
+      "cta": "Explore Collection"
+    },
+    "gift": {
+      "badge": "Limited Time",
+      "ticker": "Gift Set Campaign",
+      "title": "Gift Sets",
+      "highlight": "Buy 2 Get 1 Free",
+      "description": "Add meaning to your loved ones' day with handmade gift sets. Gift wrapping on us.",
+      "cta": "See the Sets"
+    },
+    "flash": {
+      "ticker": "Final Deals — Don't Miss Out",
+      "badge": "Last 3 Days",
+      "title": "Selected Items",
+      "highlight": "Up to 25% Off",
+      "description": "Last chance to own handcrafted pieces at end-of-season prices.",
+      "cta": "See Deals"
+    }
   },
   "cart": {
     "title": "My Cart",

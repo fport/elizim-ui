@@ -23,13 +23,24 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
 
+  const baseUrl = "https://elizim.art";
+
   return {
     title: {
       default: t("title"),
       template: `%s | Elizim`,
     },
     description: t("description"),
-    metadataBase: new URL("https://elizim.com"),
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        tr: `${baseUrl}/tr`,
+        en: `${baseUrl}/en`,
+        ar: `${baseUrl}/ar`,
+        "x-default": `${baseUrl}/tr`,
+      },
+    },
     openGraph: {
       title: t("title"),
       description: t("description"),
@@ -54,7 +65,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <div lang={locale} dir={dir}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >

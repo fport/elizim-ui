@@ -26,6 +26,12 @@ const localizedPaths: Record<string, Record<string, string>> = {
     ar: "/legal/terms",
   },
   "/legal/kvkk": { tr: "/legal/kvkk", en: "/legal/kvkk", ar: "/legal/kvkk" },
+  "/desenler": { tr: "/desenler", en: "/patterns", ar: "/patterns" },
+  "/ozel-tasarim": {
+    tr: "/ozel-tasarim",
+    en: "/custom-design",
+    ar: "/custom-design",
+  },
 };
 
 const LOCALES = ["tr", "en", "ar"] as const;
