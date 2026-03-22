@@ -132,7 +132,10 @@ export const productsApi = {
 /* ── Categories ── */
 
 export const categoriesApi = {
-  getAll: () => apiFetch<{ categories: Category[] }>("/api/categories"),
+  getAll: (locale?: string) => {
+    const qs = locale ? `?locale=${locale}` : "";
+    return apiFetch<{ categories: Category[] }>(`/api/categories${qs}`);
+  },
 };
 
 /* ── Instagram ── */

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -94,6 +94,7 @@ function BottomSheet({
 export function ProductCatalogClient() {
   const t = useTranslations("products");
   const tTags = useTranslations("productTags");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTag, setSelectedTag] = useState<ProductTag | "">("");
@@ -126,8 +127,8 @@ export function ProductCatalogClient() {
   });
 
   const { data: categoriesRes } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => categoriesApi.getAll(),
+    queryKey: ["categories", locale],
+    queryFn: () => categoriesApi.getAll(locale),
   });
 
   const products = productsRes?.products ?? [];

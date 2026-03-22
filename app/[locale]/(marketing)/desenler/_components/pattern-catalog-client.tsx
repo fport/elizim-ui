@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -88,6 +88,7 @@ function BottomSheet({
 export function PatternCatalogClient() {
   const t = useTranslations("patterns");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
@@ -120,8 +121,8 @@ export function PatternCatalogClient() {
   });
 
   const { data: categoriesRes } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => categoriesApi.getAll(),
+    queryKey: ["categories", locale],
+    queryFn: () => categoriesApi.getAll(locale),
   });
 
   const patterns = patternsRes?.patterns ?? [];
