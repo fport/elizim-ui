@@ -23,10 +23,10 @@ import { patternsApi, type Pattern } from "@/lib/api";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  Kolay: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  Orta: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  Zor: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+const TECHNIQUE_COLORS: Record<string, string> = {
+  "Maraş İşi": "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  "Kanaviçe": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  "Logo": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
 };
 
 export function PatternDetailClient({ slug }: { slug: string }) {
@@ -225,7 +225,7 @@ export function PatternDetailClient({ slug }: { slug: string }) {
               <span
                 className={cn(
                   "inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold",
-                  DIFFICULTY_COLORS[pattern.difficulty] || "bg-muted text-foreground",
+                  TECHNIQUE_COLORS[pattern.difficulty] || "bg-muted text-foreground",
                 )}
               >
                 {pattern.difficulty}
@@ -291,7 +291,7 @@ export function PatternDetailClient({ slug }: { slug: string }) {
                 <div className="flex items-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm">
                   <BarChart3 className="size-4 text-muted-foreground" />
                   <div>
-                    <p className="text-xs text-muted-foreground">{t("difficulty")}</p>
+                    <p className="text-xs text-muted-foreground">{t("technique")}</p>
                     <p className="font-semibold">{pattern.difficulty}</p>
                   </div>
                 </div>
@@ -397,7 +397,7 @@ export function PatternDetailClient({ slug }: { slug: string }) {
                               "inline-flex items-center gap-1 rounded-lg px-2 py-1",
                               "text-[10px] font-bold uppercase tracking-wider",
                               "backdrop-blur-md shadow-sm",
-                              DIFFICULTY_COLORS[p.difficulty] || "bg-muted text-foreground",
+                              TECHNIQUE_COLORS[p.difficulty] || "bg-muted text-foreground",
                             )}
                           >
                             <BarChart3 className="size-3" />

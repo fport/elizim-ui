@@ -21,13 +21,13 @@ import { cn } from "@/lib/utils";
 
 type SortOption = "newest" | "price-asc" | "price-desc" | "popular";
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  Kolay: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  Orta: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  Zor: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+const TECHNIQUE_COLORS: Record<string, string> = {
+  "Maraş İşi": "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+  "Kanaviçe": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  "Logo": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
 };
 
-const DIFFICULTY_VALUES = ["Kolay", "Orta", "Zor"] as const;
+const TECHNIQUE_VALUES = ["Maraş İşi", "Kanaviçe", "Logo"] as const;
 
 /* ─── Bottom Sheet ─── */
 function BottomSheet({
@@ -91,7 +91,7 @@ export function PatternCatalogClient() {
   const locale = useLocale();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  const [selectedTechnique, setSelectedDifficulty] = useState("");
   const [sort, setSort] = useState<SortOption>("newest");
   const [showFilterSheet, setShowFilterSheet] = useState(false);
   const [showSortSheet, setShowSortSheet] = useState(false);
@@ -143,12 +143,12 @@ export function PatternCatalogClient() {
       );
     }
 
-    if (selectedDifficulty) {
-      result = result.filter((p) => p.difficulty === selectedDifficulty);
+    if (selectedTechnique) {
+      result = result.filter((p) => p.difficulty === selectedTechnique);
     }
 
     return result;
-  }, [patterns, search, selectedDifficulty]);
+  }, [patterns, search, selectedTechnique]);
 
   const sortLabels: Record<SortOption, string> = {
     newest: t("sortNewest"),
@@ -157,14 +157,14 @@ export function PatternCatalogClient() {
     popular: t("sortPopular"),
   };
 
-  const difficultyLabels: Record<string, string> = {
-    Kolay: t("difficultyEasy"),
-    Orta: t("difficultyMedium"),
-    Zor: t("difficultyHard"),
+  const techniqueLabels: Record<string, string> = {
+    "Maraş İşi": t("techniqueMaras"),
+    "Kanaviçe": t("techniqueCross"),
+    "Logo": t("techniqueLogo"),
   };
 
   const activeFilterCount =
-    (selectedCategory ? 1 : 0) + (selectedDifficulty ? 1 : 0);
+    (selectedCategory ? 1 : 0) + (selectedTechnique ? 1 : 0);
 
   const clearAllFilters = () => {
     setSelectedCategory("");
@@ -330,37 +330,37 @@ export function PatternCatalogClient() {
               {/* Difficulty Filter - Desktop */}
               <div>
                 <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("difficulty")}
+                  {t("technique")}
                 </h4>
                 <div className="space-y-1">
                   <button
                     onClick={() => setSelectedDifficulty("")}
                     className={cn(
                       "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
-                      !selectedDifficulty
+                      !selectedTechnique
                         ? "bg-muted font-semibold text-foreground"
                         : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                     )}
                   >
                     {t("allCategories")}
                   </button>
-                  {DIFFICULTY_VALUES.map((diff) => (
+                  {TECHNIQUE_VALUES.map((diff) => (
                     <button
                       key={diff}
                       onClick={() =>
                         setSelectedDifficulty(
-                          selectedDifficulty === diff ? "" : diff,
+                          selectedTechnique === diff ? "" : diff,
                         )
                       }
                       className={cn(
                         "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
-                        selectedDifficulty === diff
+                        selectedTechnique === diff
                           ? "bg-muted font-semibold text-foreground"
                           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
                       )}
                     >
                       <BarChart3 className="size-3.5" />
-                      {difficultyLabels[diff]}
+                      {techniqueLabels[diff]}
                     </button>
                   ))}
                 </div>
@@ -400,9 +400,9 @@ export function PatternCatalogClient() {
                         </button>
                       </span>
                     )}
-                    {selectedDifficulty && (
+                    {selectedTechnique && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                        {difficultyLabels[selectedDifficulty]}
+                        {techniqueLabels[selectedTechnique]}
                         <button
                           onClick={() => setSelectedDifficulty("")}
                           className="rounded-full p-0.5 hover:bg-primary/20"
@@ -557,12 +557,12 @@ export function PatternCatalogClient() {
                                   "inline-flex items-center gap-1 rounded-lg px-2 py-1",
                                   "text-[10px] font-bold uppercase tracking-wider",
                                   "backdrop-blur-md shadow-sm",
-                                  DIFFICULTY_COLORS[pattern.difficulty] ||
+                                  TECHNIQUE_COLORS[pattern.difficulty] ||
                                     "bg-muted text-foreground",
                                 )}
                               >
                                 <BarChart3 className="size-3" />
-                                {difficultyLabels[pattern.difficulty] ||
+                                {techniqueLabels[pattern.difficulty] ||
                                   pattern.difficulty}
                               </span>
                             )}
@@ -656,37 +656,37 @@ export function PatternCatalogClient() {
         {/* Difficulty */}
         <div className="mb-6">
           <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            {t("difficulty")}
+            {t("technique")}
           </h4>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedDifficulty("")}
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium transition-all",
-                !selectedDifficulty
+                !selectedTechnique
                   ? "bg-foreground text-background"
                   : "bg-muted text-muted-foreground",
               )}
             >
               {t("allCategories")}
             </button>
-            {DIFFICULTY_VALUES.map((diff) => (
+            {TECHNIQUE_VALUES.map((diff) => (
               <button
                 key={diff}
                 onClick={() =>
                   setSelectedDifficulty(
-                    selectedDifficulty === diff ? "" : diff,
+                    selectedTechnique === diff ? "" : diff,
                   )
                 }
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all",
-                  selectedDifficulty === diff
+                  selectedTechnique === diff
                     ? "bg-foreground text-background"
                     : "bg-muted text-muted-foreground",
                 )}
               >
                 <BarChart3 className="size-3.5" />
-                {difficultyLabels[diff]}
+                {techniqueLabels[diff]}
               </button>
             ))}
           </div>
